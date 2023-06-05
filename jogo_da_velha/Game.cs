@@ -262,19 +262,6 @@ namespace jogo_da_velha
             return false;
         }
 
-        private void blockUserMove(WinProbability userProbability)
-        {
-            foreach (var item in userProbability.fields)
-            {
-                var field = fields.FirstOrDefault((e) => e.column == item.Item1 && e.row == item.Item2);
-                if (field != null && field.owner == null)
-                {
-                    field.owner = EPlayer.computer;
-                    return;
-                }
-            }
-        }
-
         private bool checkMomentWin()
         {
             foreach (var winProbability in winProbabilities)
@@ -350,6 +337,33 @@ namespace jogo_da_velha
             return userProbability;
         }
 
+        private bool computerAlreadyStoppedProbability(WinProbability probability)
+        {
+            foreach (var probabilityField in probability.fields)
+            {
+                var field = fields.FirstOrDefault(
+                    (e) => e.column == probabilityField.Item1 && e.row == probabilityField.Item2);
+                if (field != null && field.owner == EPlayer.computer)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void blockUserMove(WinProbability userProbability)
+        {
+            foreach (var item in userProbability.fields)
+            {
+                var field = fields.FirstOrDefault((e) => e.column == item.Item1 && e.row == item.Item2);
+                if (field != null && field.owner == null)
+                {
+                    field.owner = EPlayer.computer;
+                    return;
+                }
+            }
+        }
+
         private void checkWin(EPlayer player)
         {
             var selectedFields = fields.Where((e) => e.owner == player).ToList();
@@ -380,20 +394,6 @@ namespace jogo_da_velha
                     }
                 }
             }
-        }
-
-        private bool computerAlreadyStoppedProbability(WinProbability probability)
-        {
-            foreach (var probabilityField in probability.fields)
-            {
-                var field = fields.FirstOrDefault(
-                    (e) => e.column == probabilityField.Item1 && e.row == probabilityField.Item2);
-                if (field != null && field.owner == EPlayer.computer)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
 
         private void generateProbabilities()
